@@ -13,7 +13,7 @@ library(tseries)
 library("urca")                                #Carrega Pacote URCA
 library(readxl)                                #Carrega Pacote readxl
 library(pwt8)                                  #Carrega o pacote PWT8.0
-library("ggplot2")
+
 
 
 data("pwt8.0")                                 #Carrega os dados elencados "pwt8.0" dispoiníveis no pacote
