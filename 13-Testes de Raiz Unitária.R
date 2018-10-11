@@ -1,47 +1,53 @@
-                          #Aula 13 - Testes de Raiz Unit·ria
-install.packages("forecast")                 #Instala Pacote Forecast
+                          #Aula 13 - Testes de Raiz Unit√°ria
+remove.packages("ggplot2")
+install.packages("ggplot2", dependencies = TRUE)
+remove.packages("forecast")
+install.packages("forecast", dependencies = TRUE)                 #Instala Pacote Forecast
 install.packages(urca)
-install.packages("tseries")
 install.packages(readxl)
-install.packages("pwt8")
+remove.packages("pwt8")
+install.packages("pwt8", dependencies = TRUE)
+install.packages("plyr", dependencies = TRUE)
+library("plyr")
 library(forecast)
 library(tseries)
 library("urca")                                #Carrega Pacote URCA
 library(readxl)                                #Carrega Pacote readxl
 library(pwt8)                                  #Carrega o pacote PWT8.0
+library("ggplot2")
 
 
-data("pwt8.0")                                 #Carrega os dados elencados "pwt8.0" dispoinÌveis no pacote
+data("pwt8.0")                                 #Carrega os dados elencados "pwt8.0" dispoin√≠veis no pacote
 View(pwt8.0)                                   #Visualiza os dados na tabela pwt8.0
 
 
 br <- subset(pwt8.0, country=="Brazil", 
-             select = c("rgdpna","emp","xr"))  #Cria a tabela "br" com dados das linhas que assumem o valor "country" (paÌs) igual a "Brazil", selecionando as colunas cujas vari·veis s„o "rgdpna" (PIB), "avh" (TRABALHO)  e "xr" (C¬MBIO)
+             select = c("rgdpna","emp","xr"))  #Cria a tabela "br" com dados das linhas que assumem o valor "country" (pa√≠s) igual a "Brazil", selecionando as colunas cujas vari√°veis s√£o "rgdpna" (PIB), "avh" (TRABALHO)  e "xr" (C√ÇMBIO)
 
-colnames(br) <-  c("PIB","Emprego","C‚mbio")   #Renomeia as colunas para PIB, Trabalho e C‚mbio
+colnames(br) <-  c("PIB","Emprego","C√¢mbio")   #Renomeia as colunas para PIB, Trabalho e C√¢mbio
 
-                                        #Separando as vari·veis
-PIB <- br$PIB[45:62]                    #Cria o vetor para vari·vel PIB                  
-EMPREGO <- br$Emprego[45:62]            #Cria o vetor para vari·vel EMPREGO
-CAMBIO <- br$C‚mbio[45:62]              #Cria o vetor para vari·vel CAMBIO
-Anos <- seq(from=1994, to=2011, by=1)   #Cria um vetor para o tempo em anos de 1994 atÈ 2011 
+                                        #Separando as vari√°veis
+PIB <- br$PIB[45:62]                    #Cria o vetor para vari√°vel PIB                  
+EMPREGO <- br$Emprego[45:62]            #Cria o vetor para vari√°vel EMPREGO
+CAMBIO <- br$C√¢mbio[45:62]              #Cria o vetor para vari√°vel CAMBIO
+Anos <- seq(from=1994, to=2011, by=1)   #Cria um vetor para o tempo em anos de 1994 at√© 2011 
 
 
                                     #Analise para o PIB
 
-plot(PIB, type = "l")                            #Cria gr·fico para o PIB
-pib <- ts(PIB, start = 1994, frequency = 1)  #Define como SÈrie Temporal
-plot(pib, main="Produto Interno Bruto", 
-     ylab="Milhoes de dolares", 
-     xlab="Ano")                                      #Cria gr·fico da SÈrie Temporal
+plot(PIB, type = "l")                            #Cria gr√°fico para o PIB
+pib <- ts(PIB, start = 1994, frequency = 1)  #Define como S√©rie Temporal
+plot(cambio, main="Produto Interno Bruto", 
+     ylab="Milhoes de reais", 
+     xlab="Ano")                                      #Cria gr√°fico da S√©rie Temporal
 
-acf(pib)                                          #FunÁ„o de AutocorrelaÁ„o
-pacf(pib)                                         ##FunÁ„o de AutocorrelaÁ„o Parcial
-reglinPIB <- lm(PIB ~ Anos)                       #Regress„o linear simples do emprego em relaÁ„o ao tempo
-reglinPIB                                         #Exibe os resultados da regress„o linear
+acf(pib)                                          #Fun√ß√£o de Autocorrela√ß√£o
+pacf(pib)                                         ##Fun√ß√£o de Autocorrela√ß√£o Parcial
+reglinPIB <- lm(PIB ~ Anos)                       #Regress√£o linear simples do emprego em rela√ß√£o ao tempo
+reglinPIB                                         #Exibe os resultados da regress√£o linear
 summary(reglinPIB)
-plot(pib)                                         #Gr·fcio dos dados
-abline(reglinPIB, col="Blue")                     #Insere a linha de regress„o linear estimada
+plot(pib)                                         #Gr√°fcio dos dados
+abline(reglinPIB, col="Blue")                         #Insere a linha de regress√£o linear estimada
 
 #Teste ADF
 
@@ -62,13 +68,12 @@ pp.test(pib)
 
 kpss.test(pib)
 
-#Removendo TendÍncia por Meio de Regress„o Linear
+#Removendo Tend√™ncia por Meio de Regress√£o Linear
 
-residuosPIB <- reglinPIB$residuals                    #Salva os resÌduos no vetor residuosEMP
-reglinPIBres <- lm(residuosPIB ~ Anos)                #Regress„o linear dos resÌduos em funÁ„o do tempo
-plot(residuosPIB,type="l")                            #Gr·fico dos resÌduos
-abline(reglinPIBres, col="Blue")                      #Insere a linha de regress„o linear dos resÌduos
-acf(residuosPIB)
+residuosPIB <- reglinPIB$residuals                    #Salva os res√≠duos no vetor residuosEMP
+reglinPIBres <- lm(residuosPIB ~ Anos)                #Regress√£o linear dos res√≠duos em fun√ß√£o do tempo
+plot(residuosPIB,type="l")                            #Gr√°fico dos res√≠duos
+abline(reglinPIBres, col="Blue")                      #Insere a linha de regress√£o linear dos res√≠duos
 
 #Teste ADF
 
@@ -89,13 +94,13 @@ pp.test(residuosPIB)
 
 kpss.test(residuosPIB)
 
-#Removendo TendÍncia por meio da diferenÁa
+#Removendo Tend√™ncia por meio da diferen√ßa
 
-pdPIB <- diff(PIB)                                               #Calcula a primeira diferenÁa da sÈrie de dados
-diferenca1PIB <- (data.frame(PIB[2:18],pdPIB))                   #Exibe a tabela da sÈrie original coma diferenÁa <- 
+pdPIB <- diff(PIB)                                               #Calcula a primeira diferen√ßa da s√©rie de dados
+diferenca1PIB <- (data.frame(PIB[2:18],pdPIB))                   #Exibe a tabela da s√©rie original coma diferen√ßa <- 
 DIFERENCAPIB <- ts(diferenca1PIB, start = 1994, frequency = 1)   #Define serie temporal para a tabela diferenca1
 plot(DIFERENCAPIB, plot.type="single", col=c("Black","Green"))   #Cria o grafico com as duas series
-plot(pdePIB, type="l")                                           #Cria gr·fico somente para a serie da diferenÁa
+plot(pdePIB, type="l")                                           #Cria gr√°fico somente para a serie da diferen√ßa
 
 #Teste ADF
 
@@ -116,7 +121,7 @@ pp.test(pdPIB)
 
 kpss.test(pdPIB)
 
-#Estimando a sÈrie temporal
+#Estimando a s√©rie temporal
 
 
 #Notas na Aula 13
@@ -128,52 +133,41 @@ arima110 <- arima(pib, c(1,1,0))
 arima111 <- arima(pib, c(1,1,1))
 arima112 <- arima(pib, c(1,1,2))
 
-arima210 <-  arima(pib, c(2,1,0))
-arima211 <-  arima(pib, c(2,1,1))
-arima212 <-  arima(pib, c(2,1,2))
-arima213 <-  arima(pib, c(2,1,3))
 #MA
 arima011 <-  arima(pib, c(0,1,1))
 arima012 <-  arima(pib, c(0,1,2))
 arima013 <-  arima(pib, c(0,1,3))
-#AR
-arima020 <-  arima(pib, c(0,1,0))
+
 
 #Escolher o melhor modelo com base no menor AIC/BIC
 estimacoes <- list(arima113,arima110,arima111,
-                   arima112,arima210,arima211,
-                   arima212,arima213,arima011,arima011, arima012,
-                   arima013,arima010)
+                   arima112,arima011,arima011, 
+                   arima012,arima013)
 AIC <- sapply(estimacoes, AIC)
-AIC <- as.data.frame(AIC)
 BIC <- sapply(estimacoes, BIC)
-BIC <- as.data.frame(BIC)
 Modelo <-c("arima113","arima110","arima111",
-                "arima112","arima210","arima211",
-                "arima212","arima213","arima011","arima011", "arima012",
-                "arima013","arima010") 
+            "arima112","arima011","arima011", 
+            "arima012","arima013") 
 Resultados <- data.frame(Modelo,AIC,BIC)
 View(Resultados)
 
-#Previs„o - Notas na Aula 11
+#Previs√£o - Notas na Aula 11
 
-melhor_modelo <-                          #Preencha com o melhor modelo de acordo com os AIC s estimados
-previsto <- predict(melhor_modelo,6)      #Previs„o para os prÛximos 6 anos seguindo o melhor modelo estimado
-View(previsto$pred)                       #Valores previstos
-previsto1 <- forecast(melhor_modelo,6)    #Mesma previs„o mas pelo comando forecast que retorna um intervalo de confianÁa
-previsto1                                 #Valores e intervalos previstos
+melhor_modelo <- arima112
+predict(melhor_modelo,6)
+forecast(melhor_modelo,6)
 
 previsao01 <- forecast(melhor_modelo,6)
-previstoBEST <- previsao01$fitted
-modelo01 <- data.frame(previstoBEST,PIB)
-modelo01 <- ts(modelo01,start = 1994, frequency = 1) 
+previsao02 <- predict(melhor_modelo,6)
+PIB1 <- as.data.frame(PIB)
+modelo011 <- data.frame(PIB1,previsao01$fitted)
+modelo01 <- ts(modelo011,start = 1994, frequency = 1) 
 plot(modelo01, main="Previsto e Observado - Best Model", 
      plot.type="single",
      xlab="Data", 
      ylab="PIB", 
-     col=c("Green","Black"))                  #Gr·fico com valores previstos e observados
+     col=c("Green","Black"))
 
 
-plot(forecast(melhor_modelo,6), 
-     main ="Previsao do PIB - Melhor Modelo") #Gr·fco com valores e intervalos previstos
+plot(previsao01, main ="Previsao do PIB - Melhor Modelo")
 
