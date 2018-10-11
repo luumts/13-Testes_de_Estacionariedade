@@ -1,6 +1,5 @@
                           #Aula 13 - Testes de Raiz Unitária
-remove.packages("ggplot2")
-install.packages("ggplot2", dependencies = TRUE)
+
 remove.packages("forecast")
 install.packages("forecast", dependencies = TRUE)                 #Instala Pacote Forecast
 install.packages(urca)
