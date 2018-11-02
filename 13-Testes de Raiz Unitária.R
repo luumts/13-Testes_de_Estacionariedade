@@ -48,7 +48,35 @@ summary(reglinPIB)
 plot(pib)                                         #Gráfcio dos dados
 abline(reglinPIB, col="Blue")                         #Insere a linha de regressão linear estimada
 
-#Teste ADF
+                                    #Analise para o EMPREGO
+
+plot(EMPREGO, type = "l")                            #Cria gráfico 
+emprego <- ts(EMPREGO, start = 1994, frequency = 1)  #Define como Série Temporal
+plot(emprego, main="Pessoa Empregadas no Brasil", ylab="Qte de Pessoas Empregadas-milhões", xlab="Ano")                                      #Cria gráfico da Série Temporal
+
+acf(emprego)                                          #Função de Autocorrelação
+pacf(emprego)                                         ##Função de Autocorrelação Parcial
+reglinEMP <- lm(EMPREGO ~ Anos)                       #Regressão linear simples 
+reglinEMP                                             #Exibe os resultados da regressão linear
+summary(reglinEMP)
+plot(emprego)                                         #Gráfcio dos dados
+abline(reglinEMP, col="Blue")                         #Insere a linha de regressão linear estimada
+
+                                #Analise para o CAMBIO
+
+plot(CAMBIO, type = "l")                            #Cria gráfico 
+cambio <- ts(CAMBIO, start = 1994, frequency = 1)  #Define como Série Temporal
+plot(cambio, main="Câmbio - Brasil", ylab="Câmbio", xlab="Ano")   #Cria gráfico da Série Temporal
+
+acf(cambio)                                          #Função de Autocorrelação
+pacf(cambio)                                         ##Função de Autocorrelação Parcial
+reglinCAM <- lm(CAMBIO ~ Anos)                       #Regressão linear simples 
+reglinCAM                                             #Exibe os resultados da regressão linear
+summary(reglinCAM)
+plot(cambio)                                         #Gráfcio dos dados
+abline(reglinCAM, col="Blue")                         #Insere a linha de regressão linear estimada
+
+#Teste ADF - PIB
 
 TesteADF_PIB_trend <- ur.df(pib, "trend", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
 summary(TesteADF_PIB_trend) 
@@ -59,13 +87,51 @@ summary(TesteADF_PIB_drift)
 TesteADF_PIB_none <- ur.df(pib, "none", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
 summary(TesteADF_PIB_none)
 
-#Teste Phillips-Perron
+#Teste ADF - Emprego
+
+TesteADF_EMPREGO_trend <- ur.df(emprego, "trend", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_EMPREGO_trend) 
+
+TesteADF_EMPREGO_drift <- ur.df(emprego, "drif", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_EMPREGO_drift) 
+
+TesteADF_EMPREGO_none <- ur.df(emprego, "none", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_EMPREGO_none)
+
+#Teste ADF - Cambio
+
+TesteADF_CAMBIO_trend <- ur.df(cambio, "trend", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_CAMBIO_trend) 
+
+TesteADF_CAMBIO_drift <- ur.df(cambio, "drif", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_CAMBIO_drift) 
+
+TesteADF_CAMBIO_none <- ur.df(cambio, "none", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_CAMBIO_none)
+
+#Teste Phillips-Perron - PIB
 
 pp.test(pib)
 
-#Teste KPSS
+#Teste Phillips-Perron - Emprego
+
+pp.test(emprego)
+
+#Teste Phillips-Perron - Cambio
+
+pp.test(cambio)
+
+#Teste KPSS - PIB
 
 kpss.test(pib)
+
+#Teste KPSS - Emprego
+
+kpss.test(emprego)
+
+#Teste KPSS - Cambio
+
+kpss.test(cambio)
 
 #Removendo Tendência por Meio de Regressão Linear
 
@@ -73,6 +139,16 @@ residuosPIB <- reglinPIB$residuals                    #Salva os resíduos no vet
 reglinPIBres <- lm(residuosPIB ~ Anos)                #Regressão linear dos resíduos em função do tempo
 plot(residuosPIB,type="l")                            #Gráfico dos resíduos
 abline(reglinPIBres, col="Blue")                      #Insere a linha de regressão linear dos resíduos
+
+residuosEMPREGO <- reglinEMP$residuals                    #Salva os resíduos no vetor residuosEMP
+reglinEMPres <- lm(residuosEMP ~ Anos)                #Regressão linear dos resíduos em função do tempo
+plot(residuosEMP,type="l")                            #Gráfico dos resíduos
+abline(reglinEMPres, col="Green")                      #Insere a linha de regressão linear dos resíduos
+
+residuosCAMBIO <- reglinCAM$residuals                    #Salva os resíduos no vetor residuosEMP
+reglinCAMres <- lm(residuosCAM ~ Anos)                #Regressão linear dos resíduos em função do tempo
+plot(residuosCAM,type="l")                            #Gráfico dos resíduos
+abline(reglinCAMres, col="Pink")                      #Insere a linha de regressão linear dos resíduos
 
 #Teste ADF
 
@@ -85,13 +161,39 @@ summary(TesteADF_residuosPIB_drift)
 TesteADF_residuosPIB_none <- ur.df(residuosPIB, "none", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
 summary(TesteADF_residuosPIB_none)
 
+TesteADF_residuosEMP_trend <- ur.df(residuosEMP, "trend", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_residuosEMP_trend)
+
+TesteADF_residuosEMP_drift <- ur.df(residuosEMP, "drift", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_residuosEMP_drift)
+
+TesteADF_residuosEMP_none <- ur.df(residuosEMP, "none", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_residuosEMP_none)
+
+TesteADF_residuosCAM_trend <- ur.df(residuosCAM, "trend", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_residuosCAM_trend)
+
+TesteADF_residuosCAM_drift <- ur.df(residuosCAM, "drift", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_residuosCAM_drift)
+
+TesteADF_residuosCAM_none <- ur.df(residuosCAM, "none", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_residuosCAM_none)
+
 #Teste Phillips-Perron
 
 pp.test(residuosPIB)
 
+pp.test(residuosEMP)
+
+pp.test(residuosCAM)
+
 #Teste KPSS
 
 kpss.test(residuosPIB)
+
+kpss.test(residuosEMP)
+
+kpss.test(residuosCAM)
 
 #Removendo Tendência por meio da diferença
 
@@ -100,6 +202,18 @@ diferenca1PIB <- (data.frame(PIB[2:18],pdPIB))                   #Exibe a tabela
 DIFERENCAPIB <- ts(diferenca1PIB, start = 1994, frequency = 1)   #Define serie temporal para a tabela diferenca1
 plot(DIFERENCAPIB, plot.type="single", col=c("Black","Green"))   #Cria o grafico com as duas series
 plot(pdePIB, type="l")                                           #Cria gráfico somente para a serie da diferença
+
+pdemprego <- diff(EMPREGO)                                #Calcula a primeira diferença da série de dados
+diferenca1EMP <- (data.frame(EMPREGO[2:18],pdemprego))       #Exibe a tabela da série original coma diferença <- 
+DIFERENCAEMP <- ts(diferenca1EMP, start = 1994, frequency = 1)  #Define serie temporal para a tabela diferenca1
+plot(DIFERENCAEMP, plot.type="single", col=c("Black","Green")) #Cria o grafico com as duas series
+plot(pdemprego, type="l") 
+
+pdcambio <- diff(CAMBIO)                                #Calcula a primeira diferença da série de dados
+diferenca1CAM <- (data.frame(CAMBIO[2:18],pdcambio))       #Exibe a tabela da série original coma diferença 
+DIFERENCACAM <- ts(diferenca1CAM, start = 1994, frequency = 1)  #Define serie temporal para a tabela diferenca1
+plot(DIFERENCACAM, plot.type="single", col=c("Black","Green")) #Cria o grafico com as duas series
+plot(pdcambio, type="l")                                   #Cria gráfico somente para a serie da diferença
 
 #Teste ADF
 
@@ -112,43 +226,173 @@ summary(TesteADF_pdPIB_drift)
 TesteADF_pdPIB_none <- ur.df(pdPIB, "none", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
 summary(TesteADF_pdPIB_none)
 
+
+TesteADF_pdEMP_trend <- ur.df(pdEMP, "trend", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_ pdEMP_trend)
+
+TesteADF_pdEMP_drift <- ur.df(pdEMP, "drift", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_ pdEMP_drift)
+
+TesteADF_pdEMP_none <- ur.df(pdEMP, "none", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_ pdEMP_none)
+
+
+TesteADF_pdCAM_trend <- ur.df(pdCAM, "trend", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_ pdCAM _trend)
+
+TesteADF_ pdCAM _drift <- ur.df(pdCAM, "drift", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_ pdCAM _drift)
+
+TesteADF_ pdCAM _none <- ur.df(pdCAM, "none", lags = 1)         #Teste DF-DickFuller com drift e com tendencia
+summary(TesteADF_ pdCAM _none)
+
+
 #Teste Phillips-Perron
 
 pp.test(pdPIB)
 
+pp.test(pdEMP)
+
+pp.test(pdCAM)
+
 #Teste KPSS
 
 kpss.test(pdPIB)
+
+kpss.test(pdEMP)
+
+kpss.test(pdCAM)
 
 #Estimando a série temporal
 
 
 #Notas na Aula 13
 
-arima113 <- arima(pib, c(1,1,3))
+#Estimando a série temporal - Emprego
 
+arima120 <- arima(emprego, c(1,2,0))
+arima121 <- arima(emprego, c(1,2,1))
+arima122 <- arima(emprego, c(1,2,2))
+arima123 <- arima(emprego, c(1,2,3))
+
+arima220 <- arima(emprego, c(2,2,0))
+arima221 <- arima(emprego, c(2,2,1))
+arima222 <- arima(emprego, c(2,2,2))
+arima223 <- arima(emprego, c(2,2,3))
 #ARMA
-arima110 <- arima(pib, c(1,1,0))
-arima111 <- arima(pib, c(1,1,1))
-arima112 <- arima(pib, c(1,1,2))
+arma10 <- arima(emprego, c(1,0,0))
+arma11 <- arima(emprego, c(1,0,1))
+arma12 <- arima(emprego, c(1,0,2))
+arma13 <- arima(emprego, c(1,0,3))
 
+arma20 <- arima(emprego, c(2,0,0))
+arma21 <- arima(emprego, c(2,0,1))
+arma22 <- arima(emprego, c(2,0,2))
+arma23 <- arima(emprego, c(2,0,3))
 #MA
-arima011 <-  arima(pib, c(0,1,1))
-arima012 <-  arima(pib, c(0,1,2))
-arima013 <-  arima(pib, c(0,1,3))
-
+arima021 <- arima(emprego, c(2,2,0))
+arima022 <- arima(emprego, c(2,2,0))
+arima023 <- arima(emprego, c(2,2,0))
+#AR
+arima120 <- arima(emprego, c(1,2,0))
+arima220 <- arima(emprego, c(2,2,0))
 
 #Escolher o melhor modelo com base no menor AIC/BIC
-estimacoes <- list(arima113,arima110,arima111,
-                   arima112,arima011,arima011, 
-                   arima012,arima013)
+estimacoes <- list(arima123,arima120,arima121,
+                   arima122,arima220,rima221,
+                   arima222,arima223,arima021,arima021, arima022,
+                   arima023,arima0120)
 AIC <- sapply(estimacoes, AIC)
 BIC <- sapply(estimacoes, BIC)
-Modelo <-c("arima113","arima110","arima111",
-            "arima112","arima011","arima011", 
-            "arima012","arima013") 
+Modelo <-c(list("arima123","arima120","arima121",
+                "arima122","arima220","arima221",
+                "arima222","arima223","arima021","arima021", "arima022",
+                "arima023","arima0120")) 
 Resultados <- data.frame(Modelo,AIC,BIC)
-View(Resultados)
+
+#Estimando a série temporal - PIB
+
+arima120 <- arima(pib, c(1,2,0))
+arima121 <- arima(pib, c(1,2,1))
+arima122 <- arima(pib, c(1,2,2))
+arima123 <- arima(pib, c(1,2,3))
+
+arima220 <- arima(pib, c(2,2,0))
+arima221 <- arima(pib, c(2,2,1))
+arima222 <- arima(pib, c(2,2,2))
+arima223 <- arima(pib, c(2,2,3))
+#ARMA
+arma10 <- arima(pib, c(1,0,0))
+arma11 <- arima(pib, c(1,0,1))
+arma12 <- arima(pib, c(1,0,2))
+arma13 <- arima(pib, c(1,0,3))
+
+arma20 <- arima(pib, c(2,0,0))
+arma21 <- arima(pib, c(2,0,1))
+arma22 <- arima(pib, c(2,0,2))
+arma23 <- arima(pib, c(2,0,3))
+#MA
+arima021 <- arima(pib, c(2,2,0))
+arima022 <- arima(pib, c(2,2,0))
+arima023 <- arima(pib, c(2,2,0))
+#AR
+arima120 <- arima(pib, c(1,2,0))
+arima220 <- arima(pib, c(2,2,0))
+
+#Escolher o melhor modelo com base no menor AIC/BIC
+estimacoes <- list(arima123,arima120,arima121,
+                   arima122,arima220,rima221,
+                   arima222,arima223,arima021,arima021, arima022,
+                   arima023,arima0120)
+AIC <- sapply(estimacoes, AIC)
+BIC <- sapply(estimacoes, BIC)
+Modelo <-c(list("arima123","arima120","arima121",
+                "arima122","arima220","arima221",
+                "arima222","arima223","arima021","arima021", "arima022",
+                "arima023","arima0120")) 
+Resultados <- data.frame(Modelo,AIC,BIC)
+
+#Estimando a série temporal - CAMBIO
+
+arima120 <- arima(cambio, c(1,2,0))
+arima121 <- arima(cambio, c(1,2,1))
+arima122 <- arima(cambio, c(1,2,2))
+arima123 <- arima(cambio, c(1,2,3))
+
+arima220 <- arima(cambio, c(2,2,0))
+arima221 <- arima(cambio, c(2,2,1))
+arima222 <- arima(cambio, c(2,2,2))
+arima223 <- arima(cambio, c(2,2,3))
+#ARMA
+arma10 <- arima(cambio, c(1,0,0))
+arma11 <- arima(cambio, c(1,0,1))
+arma12 <- arima(cambio, c(1,0,2))
+arma13 <- arima(cambio, c(1,0,3))
+
+arma20 <- arima(cambio, c(2,0,0))
+arma21 <- arima(cambio, c(2,0,1))
+arma22 <- arima(cambio, c(2,0,2))
+arma23 <- arima(cambio, c(2,0,3))
+#MA
+arima021 <- arima(cambio, c(2,2,0))
+arima022 <- arima(cambio, c(2,2,0))
+arima023 <- arima(cambio, c(2,2,0))
+#AR
+arima120 <- arima(cambio, c(1,2,0))
+arima220 <- arima(cambio, c(2,2,0))
+
+#Escolher o melhor modelo com base no menor AIC/BIC
+estimacoes <- list(arima123,arima120,arima121,
+                   arima122,arima220,rima221,
+                   arima222,arima223,arima021,arima021, arima022,
+                   arima023,arima0120)
+AIC <- sapply(estimacoes, AIC)
+BIC <- sapply(estimacoes, BIC)
+Modelo <-c(list("arima123","arima120","arima121",
+                "arima122","arima220","arima221",
+                "arima222","arima223","arima021","arima021", "arima022",
+                "arima023","arima0120")) 
+Resultados <- data.frame(Modelo,AIC,BIC)
 
 #Previsão - Notas na Aula 11
 
@@ -161,11 +405,7 @@ previsao02 <- predict(melhor_modelo,6)
 PIB1 <- as.data.frame(PIB)
 modelo011 <- data.frame(PIB1,previsao01$fitted)
 modelo01 <- ts(modelo011,start = 1994, frequency = 1) 
-plot(modelo01, main="Previsto e Observado - Best Model", 
-     plot.type="single",
-     xlab="Data", 
-     ylab="PIB", 
-     col=c("Green","Black"))
+plot(modelo01, main="Previsto e Observado - Best Model", plot.type="single", lab="Data", ylab="PIB", col=c("Green","Black"))
 
 
 plot(previsao01, main ="Previsao do PIB - Melhor Modelo")
