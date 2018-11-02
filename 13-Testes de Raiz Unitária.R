@@ -36,7 +36,7 @@ Anos <- seq(from=1994, to=2011, by=1)   #Cria um vetor para o tempo em anos de 1
 
 plot(PIB, type = "l")                            #Cria gráfico para o PIB
 pib <- ts(PIB, start = 1994, frequency = 1)  #Define como Série Temporal
-plot(cambio, main="Produto Interno Bruto", 
+plot(pib, main="Produto Interno Bruto", 
      ylab="Milhoes de reais", 
      xlab="Ano")                                      #Cria gráfico da Série Temporal
 
